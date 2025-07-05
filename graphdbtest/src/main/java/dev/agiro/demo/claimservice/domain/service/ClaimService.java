@@ -16,4 +16,8 @@ public interface ClaimService {
     Claim linkSPRule(Long claimId, Long spRuleId);
     Claim linkInvoice(Long claimId, Long invoiceId);
     Claim linkNotification(Long claimId, Long notificationId);
+
+    List<Claim> searchClaims(LocalDate creationDate, String part, String location);
+
+    List<Claim> associateClaimsWithEntity(List<Long> claimIds, Long entityId, String entityType);
 }

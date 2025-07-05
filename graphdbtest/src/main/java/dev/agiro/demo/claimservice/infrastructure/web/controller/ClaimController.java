@@ -5,8 +5,20 @@ import dev.agiro.demo.claimservice.domain.Claim;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat; // For date parsing
 
+// Keep existing imports from previous steps
+import dev.agiro.demo.claimservice.domain.Claim;
+import dev.agiro.demo.claimservice.application.service.ApplicationClaimService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import dev.agiro.demo.claimservice.infrastructure.web.dto.BatchAssociationRequest;
+import javax.validation.Valid;
 import java.util.Optional;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/claims")
@@ -98,6 +110,43 @@ public class ClaimController {
             return new ResponseEntity<>(updatedClaim, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Claim>> searchClaims(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate creationDate,
+            @RequestParam(required = false) String part,
+            @RequestParam(required = false) String location) {
+        try {
+            List<Claim> claims = applicationClaimService.searchClaims(creationDate, part, location);
+            if (claims.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(claims, HttpStatus.OK);
+        } catch (Exception e) {
+            // Log the exception e
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/associate-batch")
+    public ResponseEntity<List<Claim>> batchAssociateClaimsWithEntity(@Valid @RequestBody BatchAssociationRequest request) {
+        try {
+            List<Claim> updatedClaims = applicationClaimService.associateClaimsWithEntity(
+                    request.getClaimIds(),
+                    request.getEntityId(),
+                    request.getEntityType());
+            return new ResponseEntity<>(updatedClaims, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            // Log e.getMessage() or return it in a structured error response
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST); // Or HttpStatus.UNPROCESSABLE_ENTITY
+        } catch (RuntimeException e) { // Catch other runtime exceptions like entity not found
+            // Log e.getMessage()
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); // Or more specific error based on e
+        } catch (Exception e) {
+            // Log e.getMessage()
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

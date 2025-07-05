@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class DomainClaimServiceImpl implements ClaimService {
@@ -127,5 +129,84 @@ public class DomainClaimServiceImpl implements ClaimService {
                 .orElseThrow(() -> new RuntimeException("Notification not found with ID: " + notificationId));
         claim.getNotifications().add(notification);
         return claimRepositoryPort.save(claim);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Claim> searchClaims(LocalDate creationDate, String part, String location) {
+        // Basic validation or logging could be added here if needed
+        return claimRepositoryPort.searchClaims(creationDate, part, location);
+    }
+
+    @Override
+    @Transactional
+    public List<Claim> associateClaimsWithEntity(List<Long> claimIds, Long entityId, String entityType) {
+        List<Claim> updatedClaims = new java.util.ArrayList<>();
+
+        // Fetch the target entity first
+        Object targetEntity = null;
+        switch (entityType.toUpperCase()) {
+            case "FAMILY":
+                targetEntity = familyRepositoryPort.findById(entityId)
+                        .orElseThrow(() -> new RuntimeException("Family not found with ID: " + entityId));
+                break;
+            case "REGULATOR":
+                targetEntity = regulatorRepositoryPort.findById(entityId)
+                        .orElseThrow(() -> new RuntimeException("Regulator not found with ID: " + entityId));
+                break;
+            case "DPRULE":
+                targetEntity = dpRuleRepositoryPort.findById(entityId)
+                        .orElseThrow(() -> new RuntimeException("DPRule not found with ID: " + entityId));
+                break;
+            case "SWRULE":
+                targetEntity = swRuleRepositoryPort.findById(entityId)
+                        .orElseThrow(() -> new RuntimeException("SWRule not found with ID: " + entityId));
+                break;
+            case "SPRULE":
+                targetEntity = spRuleRepositoryPort.findById(entityId)
+                        .orElseThrow(() -> new RuntimeException("SPRule not found with ID: " + entityId));
+                break;
+            case "INVOICE":
+                targetEntity = invoiceRepositoryPort.findById(entityId)
+                        .orElseThrow(() -> new RuntimeException("Invoice not found with ID: " + entityId));
+                break;
+            case "NOTIFICATION":
+                targetEntity = notificationRepositoryPort.findById(entityId)
+                        .orElseThrow(() -> new RuntimeException("Notification not found with ID: " + entityId));
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid entity type: " + entityType);
+        }
+
+        for (Long claimId : claimIds) {
+            Claim claim = claimRepositoryPort.findById(claimId)
+                    .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId + " during batch association."));
+
+            switch (entityType.toUpperCase()) {
+                case "FAMILY":
+                    claim.getFamilies().add((Family) targetEntity);
+                    break;
+                case "REGULATOR":
+                    claim.getRegulators().add((Regulator) targetEntity);
+                    break;
+                case "DPRULE":
+                    claim.getDpRules().add((DPRule) targetEntity);
+                    break;
+                case "SWRULE":
+                    claim.getSwRules().add((SWRule) targetEntity);
+                    break;
+                case "SPRULE":
+                    claim.getSpRules().add((SPRule) targetEntity);
+                    break;
+                case "INVOICE":
+                    claim.getInvoices().add((Invoice) targetEntity);
+                    break;
+                case "NOTIFICATION":
+                    claim.getNotifications().add((Notification) targetEntity);
+                    break;
+            }
+            updatedClaims.add(claimRepositoryPort.save(claim));
+        }
+        return updatedClaims;
     }
 }

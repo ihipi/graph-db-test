@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.time.LocalDate;
+import java.util.List;
 
 @Service // Spring annotation to mark this as a service component
 public class ApplicationClaimService {
@@ -62,5 +64,28 @@ public class ApplicationClaimService {
     @Transactional
     public Claim linkNotificationToClaim(Long claimId, Long notificationId) {
         return domainClaimService.linkNotification(claimId, notificationId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Claim> searchClaims(LocalDate creationDate, String part, String location) {
+        return domainClaimService.searchClaims(creationDate, part, location);
+    }
+
+    @Transactional
+    public List<Claim> associateClaimsWithEntity(List<Long> claimIds, Long entityId, String entityType) {
+        // Application-specific logic like validation or DTO mapping could go here.
+        // For example, validating that claimIds is not empty, entityType is one of the allowed values, etc.
+        if (claimIds == null || claimIds.isEmpty()) {
+            throw new IllegalArgumentException("Claim IDs list cannot be null or empty.");
+        }
+        if (entityId == null) {
+            throw new IllegalArgumentException("Entity ID cannot be null.");
+        }
+        if (entityType == null || entityType.trim().isEmpty()) {
+            throw new IllegalArgumentException("Entity type cannot be null or empty.");
+        }
+        // Further validation for entityType could be more specific, e.g., checking against an enum or a set of known strings.
+
+        return domainClaimService.associateClaimsWithEntity(claimIds, entityId, entityType);
     }
 }
