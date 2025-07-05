@@ -29,7 +29,38 @@ public class ApplicationClaimService {
         return domainClaimService.getClaimById(id);
     }
 
-    // Add other application-level use cases here, for example:
-    // public Claim linkFamilyToClaim(Long claimId, Long familyId) { ... }
-    // public Claim linkInvoiceToClaim(Long claimId, Long invoiceId) { ... }
+    @Transactional
+    public Claim linkFamilyToClaim(Long claimId, Long familyId) {
+        return domainClaimService.linkFamily(claimId, familyId);
+    }
+
+    @Transactional
+    public Claim linkRegulatorToClaim(Long claimId, Long regulatorId) {
+        return domainClaimService.linkRegulator(claimId, regulatorId);
+    }
+
+    @Transactional
+    public Claim linkDPRuleToClaim(Long claimId, Long dpRuleId) {
+        return domainClaimService.linkDPRule(claimId, dpRuleId);
+    }
+
+    @Transactional
+    public Claim linkSWRuleToClaim(Long claimId, Long swRuleId) {
+        return domainClaimService.linkSWRule(claimId, swRuleId);
+    }
+
+    @Transactional
+    public Claim linkSPRuleToClaim(Long claimId, Long spRuleId) {
+        return domainClaimService.linkSPRule(claimId, spRuleId);
+    }
+
+    @Transactional
+    public Claim linkInvoiceToClaim(Long claimId, Long invoiceId) {
+        return domainClaimService.linkInvoice(claimId, invoiceId);
+    }
+
+    @Transactional
+    public Claim linkNotificationToClaim(Long claimId, Long notificationId) {
+        return domainClaimService.linkNotification(claimId, notificationId);
+    }
 }

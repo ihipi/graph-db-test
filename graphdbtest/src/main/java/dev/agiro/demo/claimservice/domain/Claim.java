@@ -18,7 +18,6 @@ public class Claim {
     private String request;
     private String part;
     private String location;
-    private String notification;
     private LocalDate creationDate;
 
     // Relationships to be defined in the next step
@@ -40,16 +39,18 @@ public class Claim {
     @Relationship(type = "REGULATED_BY")
     private Set<Regulator> regulators = new HashSet<>();
 
+    @Relationship(type = "HAS_NOTIFICATION")
+    private Set<Notification> notifications = new HashSet<>();
+
 
     public Claim() {
     }
 
-    public Claim(String country, String request, String part, String location, String notification, LocalDate creationDate) {
+    public Claim(String country, String request, String part, String location, LocalDate creationDate) {
         this.country = country;
         this.request = request;
         this.part = part;
         this.location = location;
-        this.notification = notification;
         this.creationDate = creationDate;
     }
 
@@ -87,14 +88,6 @@ public class Claim {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getNotification() {
-        return notification;
-    }
-
-    public void setNotification(String notification) {
-        this.notification = notification;
     }
 
     public LocalDate getCreationDate() {
@@ -151,5 +144,13 @@ public class Claim {
 
     public void setRegulators(Set<Regulator> regulators) {
         this.regulators = regulators;
+    }
+
+    public Set<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Set<Notification> notifications) {
+        this.notifications = notifications;
     }
 }

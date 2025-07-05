@@ -9,10 +9,11 @@ public interface ClaimService {
 
     Optional<Claim> getClaimById(Long id);
 
-    // Add more domain-specific methods here as needed, for example:
-    // Claim addFamilyToClaim(Long claimId, Family family);
-    // Claim addInvoiceToClaim(Long claimId, Invoice invoice);
-    // Claim addRuleToClaim(Long claimId, BaseRule rule); // Assuming a common interface/superclass for rules
-    // Claim addRegulatorToClaim(Long claimId, Regulator regulator);
-    // Claim updateClaimStatus(Long claimId, String status);
+    Claim linkFamily(Long claimId, Long familyId);
+    Claim linkRegulator(Long claimId, Long regulatorId);
+    Claim linkDPRule(Long claimId, Long dpRuleId);
+    Claim linkSWRule(Long claimId, Long swRuleId);
+    Claim linkSPRule(Long claimId, Long spRuleId);
+    Claim linkInvoice(Long claimId, Long invoiceId);
+    Claim linkNotification(Long claimId, Long notificationId);
 }
