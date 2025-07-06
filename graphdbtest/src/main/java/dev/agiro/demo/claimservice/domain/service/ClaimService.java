@@ -20,4 +20,13 @@ public interface ClaimService {
     List<Claim> searchClaims(LocalDate creationDate, String part, String location);
 
     List<Claim> associateClaimsWithEntity(List<Long> claimIds, Long entityId, String entityType);
+
+    // Methods to create a new related node and link it to a claim
+    Claim createAndLinkFamily(Long claimId, Family family);
+    Claim createAndLinkRegulator(Long claimId, Regulator regulator);
+    Claim createAndLinkDPRule(Long claimId, DPRule dpRule);
+    Claim createAndLinkSWRule(Long claimId, SWRule swRule);
+    Claim createAndLinkSPRule(Long claimId, SPRule spRule);
+    Claim createAndLinkInvoice(Long claimId, Invoice invoice);
+    Claim createAndLinkNotification(Long claimId, Notification notification);
 }

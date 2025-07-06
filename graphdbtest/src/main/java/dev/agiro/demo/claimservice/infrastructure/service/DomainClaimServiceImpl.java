@@ -209,4 +209,75 @@ public class DomainClaimServiceImpl implements ClaimService {
         }
         return updatedClaims;
     }
+
+    // Implementations for createAndLink methods
+    @Override
+    @Transactional
+    public Claim createAndLinkFamily(Long claimId, Family family) {
+        Family newFamily = familyRepositoryPort.save(family);
+        Claim claim = claimRepositoryPort.findById(claimId)
+                .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
+        claim.getFamilies().add(newFamily);
+        return claimRepositoryPort.save(claim);
+    }
+
+    @Override
+    @Transactional
+    public Claim createAndLinkRegulator(Long claimId, Regulator regulator) {
+        Regulator newRegulator = regulatorRepositoryPort.save(regulator);
+        Claim claim = claimRepositoryPort.findById(claimId)
+                .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
+        claim.getRegulators().add(newRegulator);
+        return claimRepositoryPort.save(claim);
+    }
+
+    @Override
+    @Transactional
+    public Claim createAndLinkDPRule(Long claimId, DPRule dpRule) {
+        DPRule newDPRule = dpRuleRepositoryPort.save(dpRule);
+        Claim claim = claimRepositoryPort.findById(claimId)
+                .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
+        claim.getDpRules().add(newDPRule);
+        return claimRepositoryPort.save(claim);
+    }
+
+    @Override
+    @Transactional
+    public Claim createAndLinkSWRule(Long claimId, SWRule swRule) {
+        SWRule newSWRule = swRuleRepositoryPort.save(swRule);
+        Claim claim = claimRepositoryPort.findById(claimId)
+                .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
+        claim.getSwRules().add(newSWRule);
+        return claimRepositoryPort.save(claim);
+    }
+
+    @Override
+    @Transactional
+    public Claim createAndLinkSPRule(Long claimId, SPRule spRule) {
+        SPRule newSPRule = spRuleRepositoryPort.save(spRule);
+        Claim claim = claimRepositoryPort.findById(claimId)
+                .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
+        claim.getSpRules().add(newSPRule);
+        return claimRepositoryPort.save(claim);
+    }
+
+    @Override
+    @Transactional
+    public Claim createAndLinkInvoice(Long claimId, Invoice invoice) {
+        Invoice newInvoice = invoiceRepositoryPort.save(invoice);
+        Claim claim = claimRepositoryPort.findById(claimId)
+                .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
+        claim.getInvoices().add(newInvoice);
+        return claimRepositoryPort.save(claim);
+    }
+
+    @Override
+    @Transactional
+    public Claim createAndLinkNotification(Long claimId, Notification notification) {
+        Notification newNotification = notificationRepositoryPort.save(notification);
+        Claim claim = claimRepositoryPort.findById(claimId)
+                .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
+        claim.getNotifications().add(newNotification);
+        return claimRepositoryPort.save(claim);
+    }
 }

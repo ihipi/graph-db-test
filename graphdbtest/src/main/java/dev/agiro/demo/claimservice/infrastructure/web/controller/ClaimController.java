@@ -149,4 +149,76 @@ public class ClaimController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // Endpoints for creating a new related node and linking it to a claim
+    @PostMapping("/{claimId}/family")
+    public ResponseEntity<Claim> createAndLinkFamily(@PathVariable Long claimId, @Valid @RequestBody CreateRelatedNodeRequestDto dto) {
+        try {
+            Claim updatedClaim = applicationClaimService.createAndLinkFamily(claimId, dto);
+            return new ResponseEntity<>(updatedClaim, HttpStatus.CREATED);
+        } catch (RuntimeException e) { // Catch specific exceptions like ClaimNotFound or others
+            // Log e.getMessage() or return a structured error
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND); // Or BAD_REQUEST if claimId is invalid format
+        }
+    }
+
+    @PostMapping("/{claimId}/regulator")
+    public ResponseEntity<Claim> createAndLinkRegulator(@PathVariable Long claimId, @Valid @RequestBody CreateRelatedNodeRequestDto dto) {
+        try {
+            Claim updatedClaim = applicationClaimService.createAndLinkRegulator(claimId, dto);
+            return new ResponseEntity<>(updatedClaim, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/{claimId}/dprule")
+    public ResponseEntity<Claim> createAndLinkDPRule(@PathVariable Long claimId, @Valid @RequestBody CreateRelatedNodeRequestDto dto) {
+        try {
+            Claim updatedClaim = applicationClaimService.createAndLinkDPRule(claimId, dto);
+            return new ResponseEntity<>(updatedClaim, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/{claimId}/swrule")
+    public ResponseEntity<Claim> createAndLinkSWRule(@PathVariable Long claimId, @Valid @RequestBody CreateRelatedNodeRequestDto dto) {
+        try {
+            Claim updatedClaim = applicationClaimService.createAndLinkSWRule(claimId, dto);
+            return new ResponseEntity<>(updatedClaim, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/{claimId}/sprule")
+    public ResponseEntity<Claim> createAndLinkSPRule(@PathVariable Long claimId, @Valid @RequestBody CreateRelatedNodeRequestDto dto) {
+        try {
+            Claim updatedClaim = applicationClaimService.createAndLinkSPRule(claimId, dto);
+            return new ResponseEntity<>(updatedClaim, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/{claimId}/invoice")
+    public ResponseEntity<Claim> createAndLinkInvoice(@PathVariable Long claimId, @Valid @RequestBody CreateRelatedNodeRequestDto dto) {
+        try {
+            Claim updatedClaim = applicationClaimService.createAndLinkInvoice(claimId, dto);
+            return new ResponseEntity<>(updatedClaim, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/{claimId}/notification")
+    public ResponseEntity<Claim> createAndLinkNotification(@PathVariable Long claimId, @Valid @RequestBody CreateRelatedNodeRequestDto dto) {
+        try {
+            Claim updatedClaim = applicationClaimService.createAndLinkNotification(claimId, dto);
+            return new ResponseEntity<>(updatedClaim, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 }

@@ -2,6 +2,14 @@ package dev.agiro.demo.claimservice.application.service;
 
 import dev.agiro.demo.claimservice.domain.Claim;
 import dev.agiro.demo.claimservice.domain.service.ClaimService;
+import dev.agiro.demo.claimservice.infrastructure.web.dto.CreateRelatedNodeRequestDto;
+import dev.agiro.demo.claimservice.domain.Family;
+import dev.agiro.demo.claimservice.domain.Regulator;
+import dev.agiro.demo.claimservice.domain.DPRule;
+import dev.agiro.demo.claimservice.domain.SWRule;
+import dev.agiro.demo.claimservice.domain.SPRule;
+import dev.agiro.demo.claimservice.domain.Invoice;
+import dev.agiro.demo.claimservice.domain.Notification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,5 +95,50 @@ public class ApplicationClaimService {
         // Further validation for entityType could be more specific, e.g., checking against an enum or a set of known strings.
 
         return domainClaimService.associateClaimsWithEntity(claimIds, entityId, entityType);
+    }
+
+    // Methods to create a new related node and link it to a claim
+    // These methods will take the DTO, map it to the domain object, then call the domain service.
+
+    @Transactional
+    public Claim createAndLinkFamily(Long claimId, CreateRelatedNodeRequestDto dto) {
+        Family family = new Family(dto.getName(), dto.getStatus());
+        return domainClaimService.createAndLinkFamily(claimId, family);
+    }
+
+    @Transactional
+    public Claim createAndLinkRegulator(Long claimId, CreateRelatedNodeRequestDto dto) {
+        Regulator regulator = new Regulator(dto.getName(), dto.getStatus());
+        return domainClaimService.createAndLinkRegulator(claimId, regulator);
+    }
+
+    @Transactional
+    public Claim createAndLinkDPRule(Long claimId, CreateRelatedNodeRequestDto dto) {
+        DPRule dpRule = new DPRule(dto.getName(), dto.getStatus());
+        return domainClaimService.createAndLinkDPRule(claimId, dpRule);
+    }
+
+    @Transactional
+    public Claim createAndLinkSWRule(Long claimId, CreateRelatedNodeRequestDto dto) {
+        SWRule swRule = new SWRule(dto.getName(), dto.getStatus());
+        return domainClaimService.createAndLinkSWRule(claimId, swRule);
+    }
+
+    @Transactional
+    public Claim createAndLinkSPRule(Long claimId, CreateRelatedNodeRequestDto dto) {
+        SPRule spRule = new SPRule(dto.getName(), dto.getStatus());
+        return domainClaimService.createAndLinkSPRule(claimId, spRule);
+    }
+
+    @Transactional
+    public Claim createAndLinkInvoice(Long claimId, CreateRelatedNodeRequestDto dto) {
+        Invoice invoice = new Invoice(dto.getName(), dto.getStatus());
+        return domainClaimService.createAndLinkInvoice(claimId, invoice);
+    }
+
+    @Transactional
+    public Claim createAndLinkNotification(Long claimId, CreateRelatedNodeRequestDto dto) {
+        Notification notification = new Notification(dto.getName(), dto.getStatus());
+        return domainClaimService.createAndLinkNotification(claimId, notification);
     }
 }
